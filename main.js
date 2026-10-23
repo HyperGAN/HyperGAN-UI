@@ -1,6 +1,7 @@
 const electron = require('electron');
 const {app, BrowserWindow, Menu} = require('electron');
 const isDev = require('electron-is-dev');
+const {webPreferences, restrictNavigation} = require('./window-security');
 
 let mainWindow;
 
@@ -10,9 +11,10 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', function() {
-  mainWindow = new BrowserWindow({width: 800, height: 600, webPreferences: {nodeIntegration: true}});
+  mainWindow = new BrowserWindow({width: 800, height: 600, webPreferences: webPreferences()});
 
   const startURL = isDev ? 'http://localhost:3000' : ('file://' + __dirname + '/build/index.html');
+  restrictNavigation(mainWindow.webContents, startURL);
   mainWindow.loadURL(startURL);
 
   var application_menu = [

@@ -1,0 +1,16 @@
+name: Renderer security checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.1"
+      - run: node --test tests/window-security.test.cjs
+      - run: node --check main.js
